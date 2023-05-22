@@ -1,25 +1,48 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import SignIn from './component/GoogleSignIn';
+import SignOut from './component/GoogleSignOut';
 import './App.css';
 
-function App() {
+const clientId = "210767771560-ep4oisob713kpe82nepi5ud023a6qqef.apps.googleusercontent.com";
+
+const App = () => {
+  const [profile, setProfile] = useState(null);
+
+  const onSuccess = (res) => {
+    setProfile(res.profileObj);
+    console.log('success', res);
+  };
+
+  const onError = (res) => {
+    console.log("error", res);
+  };
+
+  const logOut = () => {
+    setProfile(null);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <div className="Signin">
+      <header className="AppHeader">
+        <div className="Frame">
+          {profile ? (
+            <SignOut
+              clientId={clientId}
+              profile={profile}
+              onLogoutSuccess={logOut}
+            />
+            
+          ) : (
+            <SignIn
+              clientId={clientId}
+              onSuccess={onSuccess}
+              onError={onError}
+            />
+          )}
+        </div>
       </header>
     </div>
   );
-}
+};
 
 export default App;
